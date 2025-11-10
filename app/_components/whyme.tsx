@@ -2,19 +2,13 @@
 
 import { motion } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
-import { useEffect, useState } from 'react';
+import Link from 'next/link';
 
 const WhyHireMe = () => {
   const [ref, inView] = useInView({
     triggerOnce: true,
     threshold: 0.1,
   });
-
-  const [isClient, setIsClient] = useState(false);
-
-  useEffect(() => {
-    setIsClient(true);
-  }, []);
 
   const benefits = [
     {
@@ -51,25 +45,6 @@ const WhyHireMe = () => {
     "Staying updated with latest industry trends",
     "Quick adaptation to new technologies and frameworks"
   ];
-
-  // Don't render until client-side to avoid hydration mismatch
-  if (!isClient) {
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-gray-900 to-black text-white py-20 px-4">
-        <div className="max-w-6xl mx-auto">
-          {/* Loading skeleton */}
-          <div className="animate-pulse">
-            <div className="h-16 bg-gray-800 rounded-lg mb-16 mx-auto max-w-md"></div>
-            <div className="grid md:grid-cols-2 gap-8 mb-16">
-              {[...Array(6)].map((_, i) => (
-                <div key={i} className="bg-gray-800/50 rounded-2xl p-8 h-48"></div>
-              ))}
-            </div>
-          </div>
-        </div>
-      </div>
-    );
-  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 to-black text-white py-20 px-4">
@@ -170,7 +145,6 @@ const WhyHireMe = () => {
           initial={{ opacity: 0 }}
           animate={inView ? { opacity: 1 } : {}}
           transition={{ duration: 0.8, delay: 1 }}
-          suppressHydrationWarning
         >
           <h3 className="text-2xl font-bold text-white mb-6">
             Ready to <u>transform</u> your digital presence?
@@ -178,25 +152,25 @@ const WhyHireMe = () => {
           <p className="text-xl text-gray-300 mb-8 max-w-2xl mx-auto">
             Let's build something <u>amazing</u> together. I'm ready to start delivering <u>value</u> from day one.
           </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center" suppressHydrationWarning>
-            <a href="/contact">
-            <button 
-            
-              className="px-8 py-4 bg-green-500 hover:bg-green-600 text-white font-bold rounded-lg transition-all duration-300 transform hover:scale-105 shadow-lg shadow-green-500/25"
-              suppressHydrationWarning
-            >
-              Schedule a Free Consultation
-            </button>
-            </a>
-            <a href="/projects">
-            <button 
-              
-              className="px-8 py-4 border-2 border-blue-400 hover:bg-blue-400/10 text-blue-300 font-bold rounded-lg transition-all duration-300 transform hover:scale-105"
-              suppressHydrationWarning
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <Link href="/contact">
+              <motion.button 
+                className="px-8 py-4 bg-green-500 hover:bg-green-600 text-white font-bold rounded-lg transition-all duration-300 transform hover:scale-105 shadow-lg shadow-green-500/25"
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
               >
-              View My Projects
-            </button>
-              </a>
+                Schedule a Free Consultation
+              </motion.button>
+            </Link>
+            <Link href="/projects">
+              <motion.button 
+                className="px-8 py-4 border-2 border-blue-400 hover:bg-blue-400/10 text-blue-300 font-bold rounded-lg transition-all duration-300 transform hover:scale-105"
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+              >
+                View My Projects
+              </motion.button>
+            </Link>
           </div>
         </motion.div>
 

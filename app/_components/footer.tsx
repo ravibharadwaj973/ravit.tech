@@ -28,9 +28,10 @@ const Footer = () => {
     },
     {
       name: 'Instagram',
-      url: 'https://instagram.com/yourusername',
+      url: 'https://www.instagram.com/_ravi_.307/',
       icon: '📷'
     },
+  
    
   ]
 
@@ -133,11 +134,12 @@ const Footer = () => {
 
             {/* CTA Button */}
             <motion.a
-              href="#contact"
+              href="/contact"
+                initial={false} 
               className="inline-block bg-gradient-to-r from-cyan-500 to-blue-600 text-white px-8 py-3 rounded-xl font-bold hover:from-cyan-600 hover:to-blue-700 transition-all duration-300 transform hover:scale-105 shadow-2xl shadow-cyan-500/25 mt-4"
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
-              initial={{ opacity: 0, y: 20 }}
+            
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.4 }}
               viewport={{ once: true }}

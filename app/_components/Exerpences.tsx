@@ -4,6 +4,7 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
 import CountUp from 'react-countup';
+import { Variants } from 'framer-motion';
 
 // Animation variants
 const containerVariants = {
@@ -75,8 +76,21 @@ const colorClasses = {
   }
 };
 
+// Define types
+interface ExperienceCardProps {
+  title: string;
+  description: string;
+  technologies: string[];
+  color?: keyof typeof colorClasses;
+}
+
+interface AnimatedSectionProps {
+  children: React.ReactNode;
+  color?: keyof typeof colorClasses;
+}
+
 // Experience Card Component
-const ExperienceCard = ({ title, description, technologies, color = "cyan" }) => {
+const ExperienceCard = ({ title, description, technologies, color = "cyan" }: ExperienceCardProps) => {
   const currentColor = colorClasses[color];
   
   return (
@@ -108,11 +122,35 @@ const ExperienceCard = ({ title, description, technologies, color = "cyan" }) =>
 };
 
 // Animated Section Component
-const AnimatedSection = ({ children, color = "cyan" }) => {
+const AnimatedSection = ({ children, color = "cyan" }: AnimatedSectionProps) => {
   const [ref, inView] = useInView({
     triggerOnce: true,
     threshold: 0.1,
   });
+
+  // Define variants with proper typing
+const lineVariants: Variants = {
+  hidden: { width: 0 },
+  visible: {
+    width: "100%",
+    transition: {
+      duration: 0.8,
+      ease: "easeOut"
+    }
+  }
+};
+
+const itemVariants: Variants = {
+  hidden: { opacity: 0, y: 180 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: {
+      duration: 0.6,
+      ease: "easeOut"
+    }
+  }
+};
 
   const currentColor = colorClasses[color];
 

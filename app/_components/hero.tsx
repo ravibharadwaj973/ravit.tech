@@ -2,6 +2,8 @@
 import { motion } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
 import { Orbitron, Bebas_Neue, Anton, Audiowide } from 'next/font/google';
+import { ReactNode } from 'react';
+import { Variants } from 'framer-motion';
 
 // Initialize fonts
 const orbitron = Orbitron({ subsets: ['latin'] });
@@ -9,14 +11,21 @@ const bebasNeue = Bebas_Neue({ subsets: ['latin'], weight: ['400'] });
 const anton = Anton({ subsets: ['latin'], weight: ['400'] });
 const audiowide = Audiowide({ subsets: ['latin'], weight: ['400'] });
 
-const AnimatedText = ({ children, direction = 'left', delay = 0 }) => {
+// Define types for AnimatedText props
+interface AnimatedTextProps {
+  children: ReactNode;
+  direction?: 'left' | 'right';
+  delay?: number;
+}
+
+const AnimatedText = ({ children, direction = 'left', delay = 0 }: AnimatedTextProps) => {
   const [ref, inView] = useInView({
     triggerOnce: true,
     threshold: 0.3,
     rootMargin: '-30px 0px',
   });
 
-  const variants = {
+  const variants: Variants = {
     hidden: { 
       opacity: 0, 
       y: direction === 'left' ? 50 : -50,

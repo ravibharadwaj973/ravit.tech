@@ -7,13 +7,180 @@ import CountUp from 'react-countup';
 import Footer from '../_components/footer';
 import Navbar from '../_components/Navbar';
 
-const Projects = () => {
+// Define TypeScript interfaces
+interface ProjectStats {
+  users?: string;
+  orders?: string;
+  rating?: string;
+  messages?: string;
+  uptime?: string;
+  products?: string;
+  sales?: string;
+  vendors?: string;
+  clients?: string;
+  modules?: string;
+  efficiency?: string;
+  [key: string]: string | undefined;
+}
+
+interface Project {
+  title: string;
+  description: string;
+  technologies: string[];
+  stats: ProjectStats;
+  color: string;
+  icon: string;
+}
+
+interface DevOpsProject {
+  title: string;
+  description: string;
+  technologies: string[];
+  color: string;
+  icon: string;
+}
+
+interface ProjectCardProps {
+  project: Project;
+  index: number;
+}
+
+interface DevOpsCardProps {
+  project: DevOpsProject;
+  index: number;
+}
+
+// Animation variants
+const fadeInUp = {
+  hidden: { opacity: 0, y: 60 },
+  visible: { opacity: 1, y: 0 }
+};
+
+const fadeInLeft = {
+  hidden: { opacity: 0, x: -60 },
+  visible: { opacity: 1, x: 0 }
+};
+
+const fadeInRight = {
+  hidden: { opacity: 0, x: 60 },
+  visible: { opacity: 1, x: 0 }
+};
+
+// ProjectCard component
+const ProjectCard: React.FC<ProjectCardProps> = ({ project, index }) => {
+  const [animationRef, animationInView] = useInView({
+    triggerOnce: true,
+    threshold: 0.1,
+  });
+
+  const direction = index % 2 === 0 ? fadeInLeft : fadeInRight;
+  
+  return (
+    <motion.div
+      ref={animationRef}
+      initial="hidden"
+      animate={animationInView ? "visible" : "hidden"}
+      variants={direction}
+      transition={{ duration: 0.6, delay: index * 0.1 }}
+      className="group bg-gray-900/80 backdrop-blur-sm rounded-3xl p-6 border border-gray-700 transition-all duration-300 hover:border-cyan-500/50"
+    >
+      <div className={`absolute inset-0 bg-gradient-to-br ${project.color} opacity-5 rounded-3xl`} />
+      
+      <div className="relative z-10">
+        <div className="flex items-start justify-between mb-4">
+          <div>
+            <div className="text-3xl mb-2">{project.icon}</div>
+            <h3 className="text-xl md:text-2xl font-bold text-white mb-2">
+              {project.title}
+            </h3>
+          </div>
+          <div className="text-2xl opacity-70">
+            🔗
+          </div>
+        </div>
+
+        <p className="text-gray-300 text-base leading-relaxed mb-4">
+          {project.description}
+        </p>
+
+        <div className="grid grid-cols-3 gap-3 mb-4">
+          {Object.entries(project.stats).map(([key, value]) => (
+            <div key={key} className="text-center">
+              <div className="text-lg font-bold text-white">
+                {value}
+              </div>
+              <div className="text-gray-400 text-xs capitalize">
+                {key.replace('_', ' ')}
+              </div>
+            </div>
+          ))}
+        </div>
+
+        <div className="flex flex-wrap gap-2">
+          {project.technologies.map((tech: string) => (
+            <span
+              key={tech}
+              className="px-3 py-1 bg-gray-800 border border-gray-700 rounded-full text-gray-300 text-sm"
+            >
+              {tech}
+            </span>
+          ))}
+        </div>
+      </div>
+    </motion.div>
+  );
+};
+
+// DevOpsCard component
+const DevOpsCard: React.FC<DevOpsCardProps> = ({ project, index }) => {
+  const [animationRef, animationInView] = useInView({
+    triggerOnce: true,
+    threshold: 0.1,
+  });
+
+  return (
+    <motion.div
+      ref={animationRef}
+      initial="hidden"
+      animate={animationInView ? "visible" : "hidden"}
+      variants={fadeInUp}
+      transition={{ duration: 0.6, delay: index * 0.1 }}
+      className="group bg-gray-900/80 backdrop-blur-sm rounded-2xl p-6 border border-gray-700 transition-all duration-300 hover:border-green-500/50"
+    >
+      <div className="relative z-10">
+        <div className="flex items-center space-x-3 mb-3">
+          <div className="text-2xl">{project.icon}</div>
+          <h3 className="text-lg md:text-xl font-bold text-white">
+            {project.title}
+          </h3>
+        </div>
+
+        <p className="text-gray-300 text-sm leading-relaxed mb-3">
+          {project.description}
+        </p>
+
+        <div className="flex flex-wrap gap-2">
+          {project.technologies.map((tech: string) => (
+            <span
+              key={tech}
+              className="px-3 py-1 bg-gray-800 border border-gray-700 rounded-full text-gray-300 text-sm"
+            >
+              {tech}
+            </span>
+          ))}
+        </div>
+      </div>
+    </motion.div>
+  );
+};
+
+const Projects: React.FC = () => {
   const [ref, inView] = useInView({
     triggerOnce: true,
     threshold: 0.1,
   });
 
-  const projects = [
+  const projects: Project[] = [
     {
       title: "Food Delivery Application",
       description: "A full-stack food delivery platform with real-time order tracking, payment integration, and restaurant management system.",
@@ -48,7 +215,7 @@ const Projects = () => {
     }
   ];
 
-  const devopsProjects = [
+  const devopsProjects: DevOpsProject[] = [
     {
       title: "CI/CD Pipeline Automation",
       description: "Automated deployment pipeline with Jenkins, Docker, and Kubernetes for zero-downtime deployments.",
@@ -71,130 +238,6 @@ const Projects = () => {
       icon: '📈'
     }
   ];
-
-  // Animation variants
-  const fadeInUp = {
-    hidden: { opacity: 0, y: 60 },
-    visible: { opacity: 1, y: 0 }
-  };
-
-  const fadeInLeft = {
-    hidden: { opacity: 0, x: -60 },
-    visible: { opacity: 1, x: 0 }
-  };
-
-  const fadeInRight = {
-    hidden: { opacity: 0, x: 60 },
-    visible: { opacity: 1, x: 0 }
-  };
-
-  // ProjectCard component
-  const ProjectCard = ({ project, index }) => {
-    const [animationRef, animationInView] = useInView({
-      triggerOnce: true,
-      threshold: 0.1,
-    });
-
-    const direction = index % 2 === 0 ? fadeInLeft : fadeInRight;
-    
-    return (
-      <motion.div
-        ref={animationRef}
-        initial="hidden"
-        animate={animationInView ? "visible" : "hidden"}
-        variants={direction}
-        transition={{ duration: 0.6, delay: index * 0.1 }}
-        className="group bg-gray-900/80 backdrop-blur-sm rounded-3xl p-6 border border-gray-700 transition-all duration-300 hover:border-cyan-500/50"
-      >
-        <div className={`absolute inset-0 bg-gradient-to-br ${project.color} opacity-5 rounded-3xl`} />
-        
-        <div className="relative z-10">
-          <div className="flex items-start justify-between mb-4">
-            <div>
-              <div className="text-3xl mb-2">{project.icon}</div>
-              <h3 className="text-xl md:text-2xl font-bold text-white mb-2">
-                {project.title}
-              </h3>
-            </div>
-            <div className="text-2xl opacity-70">
-              🔗
-            </div>
-          </div>
-
-          <p className="text-gray-300 text-base leading-relaxed mb-4">
-            {project.description}
-          </p>
-
-          <div className="grid grid-cols-3 gap-3 mb-4">
-            {Object.entries(project.stats).map(([key, value]) => (
-              <div key={key} className="text-center">
-                <div className="text-lg font-bold text-white">
-                  {value}
-                </div>
-                <div className="text-gray-400 text-xs capitalize">
-                  {key.replace('_', ' ')}
-                </div>
-              </div>
-            ))}
-          </div>
-
-          <div className="flex flex-wrap gap-2">
-            {project.technologies.map((tech) => (
-              <span
-                key={tech}
-                className="px-3 py-1 bg-gray-800 border border-gray-700 rounded-full text-gray-300 text-sm"
-              >
-                {tech}
-              </span>
-            ))}
-          </div>
-        </div>
-      </motion.div>
-    );
-  };
-
-  // DevOpsCard component
-  const DevOpsCard = ({ project, index }) => {
-    const [animationRef, animationInView] = useInView({
-      triggerOnce: true,
-      threshold: 0.1,
-    });
-
-    return (
-      <motion.div
-        ref={animationRef}
-        initial="hidden"
-        animate={animationInView ? "visible" : "hidden"}
-        variants={fadeInUp}
-        transition={{ duration: 0.6, delay: index * 0.1 }}
-        className="group bg-gray-900/80 backdrop-blur-sm rounded-2xl p-6 border border-gray-700 transition-all duration-300 hover:border-green-500/50"
-      >
-        <div className="relative z-10">
-          <div className="flex items-center space-x-3 mb-3">
-            <div className="text-2xl">{project.icon}</div>
-            <h3 className="text-lg md:text-xl font-bold text-white">
-              {project.title}
-            </h3>
-          </div>
-
-          <p className="text-gray-300 text-sm leading-relaxed mb-3">
-            {project.description}
-          </p>
-
-          <div className="flex flex-wrap gap-2">
-            {project.technologies.map((tech) => (
-              <span
-                key={tech}
-                className="px-3 py-1 bg-gray-800 border border-gray-700 rounded-full text-gray-300 text-sm"
-              >
-                {tech}
-              </span>
-            ))}
-          </div>
-        </div>
-      </motion.div>
-    );
-  };
 
   return (
     <div className="min-h-screen bg-black text-white">
@@ -264,7 +307,7 @@ const Projects = () => {
             </motion.h2>
 
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-              {projects.map((project, index) => (
+              {projects.map((project: Project, index: number) => (
                 <ProjectCard 
                   key={project.title} 
                   project={project} 
@@ -287,7 +330,7 @@ const Projects = () => {
             </motion.h2>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              {devopsProjects.map((project, index) => (
+              {devopsProjects.map((project: DevOpsProject, index: number) => (
                 <DevOpsCard 
                   key={project.title} 
                   project={project} 
